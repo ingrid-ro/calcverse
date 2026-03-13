@@ -1,0 +1,19 @@
+/* ── BASE: CSS variables, reset, body ─────────────────────────────────── */
+:root {
+  --bg: #F7F5F0;
+  --sur: #fff;
+  --sur2: #F0EDE6;
+  --ink: #1A1714;
+  --ink2: #6B6560;
+  --a1: #E8500A;
+  --a2: #2D6BE4;
+  --a3: #1BAF6E;
+  --a4: #9B3FD4;
+  --a5: #D4860A;
+  --a6: #0EA5C9;
+  --bdr: #E2DDD6;
+  --r: 16px;
+  --rs: 10px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--ink); }
