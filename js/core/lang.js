@@ -80,6 +80,7 @@ const TR = {
     lbl_due: "Due date",
     lbl_dob: "Date of birth",
     dp_hint: "Click to pick or type MM/DD/YYYY",
+    dp_hint_age: "Click to pick or type DD/MM/YYYY",
     lbl_prin: "Principal",
     lbl_rate: "Rate %/month",
     lbl_per: "Months",
@@ -360,6 +361,7 @@ const TR = {
     lbl_due: "Data de vencimento",
     lbl_dob: "Data de nascimento",
     dp_hint: "Clique para escolher ou digite DD/MM/AAAA",
+    dp_hint_age: "Clique para escolher ou digite DD/MM/AAAA",
     lbl_prin: "Capital inicial (R$)",
     lbl_rate: "Taxa % ao mês",
     lbl_per: "Meses",
@@ -594,15 +596,16 @@ function setLang(l) {
     .forEach((el) => (el.placeholder = t(el.dataset.iPlaceholder)));
 
   // Re-format datepicker inputs for the new locale.
-  // Keeps existing selections — only the display format and placeholder change.
+  // Age Calculator always uses DD/MM; others follow locale.
   const dpPh = l === "pt" ? "DD/MM/AAAA" : "MM/DD/YYYY";
+  const agePh = l === "pt" ? "DD/MM/AAAA" : "DD/MM/YYYY";
   if (typeof DP !== "undefined") {
     Object.keys(DP).forEach((id) => {
       dpBuf[id] = ""; // clear any in-progress typed buffer
       const el = document.getElementById("dp-" + id);
       if (el) {
         el.value = DP[id].sel ? fmtD(DP[id].sel) : "";
-        el.placeholder = dpPh;
+        el.placeholder = id === "age" ? agePh : dpPh;
         el.classList.remove("dpd-typing", "dpd-invalid");
       }
     });

@@ -43,7 +43,10 @@ function dpInit(id, def) {
   // Always sync displayed value — dpInit may be called a second time with a
   // real default after listeners are already registered (see main.js pattern).
   const el = document.getElementById("dp-" + id);
-  if (el) el.value = def ? fmtD(def) : "";
+  if (el) {
+    el.value = def ? fmtD(def) : "";
+    if (id === "age") el.placeholder = L === "pt" ? "DD/MM/AAAA" : "DD/MM/YYYY";
+  }
 }
 
 // ── Open / close ──────────────────────────────────────────────────────────
@@ -255,7 +258,7 @@ function dpUpdateTyping(id) {
 
   // Auto-commit when all 8 digits have been entered
   if (digits.length === 8) {
-    const dateStr = dpParseTyped(digits);
+    const dateStr = dpParseTyped(digits, id);
     if (dateStr) {
       DP[id].sel = dateStr;
       DP[id].y   = parseInt(dateStr.slice(0, 4));
@@ -272,13 +275,15 @@ function dpUpdateTyping(id) {
   }
 }
 
-function dpParseTyped(digits) {
+function dpParseTyped(digits, id) {
   // digits: exactly 8 chars, no slashes
   const p1 = parseInt(digits.slice(0, 2), 10);
   const p2 = parseInt(digits.slice(2, 4), 10);
   const yr  = parseInt(digits.slice(4, 8), 10);
-  const day   = L === "pt" ? p1 : p2;
-  const month = L === "pt" ? p2 : p1;
+  // Age Calculator (date of birth) always uses DD/MM/YYYY; others follow locale
+  const useDDMM = id === "age" || L === "pt";
+  const day   = useDDMM ? p1 : p2;
+  const month = useDDMM ? p2 : p1;
   if (month < 1 || month > 12 || day < 1 || yr < 1000) return null;
   const str = `${yr}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
   const obj = new Date(str + "T00:00:00");

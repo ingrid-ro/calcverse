@@ -25,6 +25,9 @@
         --r: 16px;
         --rs: 10px;
       }
+      html {
+        scroll-behavior: smooth;
+      }
       * {
         margin: 0;
         padding: 0;
@@ -143,6 +146,9 @@
         max-width: 1100px;
         margin: 0 auto;
         padding: 0 24px 60px;
+      }
+      .sec[id] {
+        scroll-margin-top: 80px;
       }
       .seclbl {
         font-size: 11px;
@@ -314,7 +320,7 @@
       }
       .dpin {
         width: 100%;
-        padding: 10px 12px 10px 34px;
+        padding: 10px 28px 10px 12px;
         border: 1.5px solid var(--bdr);
         border-radius: var(--rs);
         font-family: "Plus Jakarta Sans", sans-serif;
@@ -360,13 +366,24 @@
         font-family: monospace;
         letter-spacing: 0.5px;
       }
-      .dpico {
+      .currency-input-wrap {
+        position: relative;
+        display: block;
+        width: 100%;
+      }
+      .currency-input-wrap .currency-prefix {
         position: absolute;
-        left: 10px;
+        left: 12px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 13px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink2);
         pointer-events: none;
+        user-select: none;
+      }
+      .currency-input-wrap input {
+        padding-left: 42px !important;
       }
       .dparr {
         position: absolute;
@@ -975,6 +992,7 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/core/currency.js"></script>
   </head>
   <body>
     <nav>
@@ -1131,7 +1149,6 @@
             <div class="fg">
               <label data-i="lbl_s">Start date</label>
               <div class="dpw">
-                <span class="dpico">📅</span>
                 <input type="text" class="dpin" id="dp-bd1" placeholder="MM/DD/YYYY" readonly onclick="dpOpen('bd1')" />
                 <span class="dparr" onclick="dpOpen('bd1')">▾</span>
               </div>
@@ -1140,7 +1157,6 @@
             <div class="fg">
               <label data-i="lbl_e">End date</label>
               <div class="dpw">
-                <span class="dpico">📅</span>
                 <input type="text" class="dpin" id="dp-bd2" placeholder="MM/DD/YYYY" readonly onclick="dpOpen('bd2')" />
                 <span class="dparr" onclick="dpOpen('bd2')">▾</span>
               </div>
@@ -1282,7 +1298,6 @@
             <div class="fg">
               <label data-i="lbl_s">Start date</label>
               <div class="dpw">
-                <span class="dpico">📅</span>
                 <input type="text" class="dpin" id="dp-df1" placeholder="MM/DD/YYYY" readonly onclick="dpOpen('df1')" />
                 <span class="dparr" onclick="dpOpen('df1')">▾</span>
               </div>
@@ -1291,7 +1306,6 @@
             <div class="fg">
               <label data-i="lbl_e">End date</label>
               <div class="dpw">
-                <span class="dpico">📅</span>
                 <input type="text" class="dpin" id="dp-df2" placeholder="MM/DD/YYYY" readonly onclick="dpOpen('df2')" />
                 <span class="dparr" onclick="dpOpen('df2')">▾</span>
               </div>
@@ -1336,7 +1350,6 @@
             <div class="fg">
               <label data-i="lbl_s">Start date</label>
               <div class="dpw">
-                <span class="dpico">📅</span>
                 <input type="text" class="dpin" id="dp-dl" placeholder="MM/DD/YYYY" readonly onclick="dpOpen('dl')" />
                 <span class="dparr" onclick="dpOpen('dl')">▾</span>
               </div>
@@ -1372,11 +1385,10 @@
           <div class="fg">
             <label data-i="lbl_dob">Date of birth</label>
             <div class="dpw">
-              <span class="dpico">🎂</span>
-              <input type="text" class="dpin" id="dp-age" placeholder="MM/DD/YYYY" readonly onclick="dpOpen('age')" />
+              <input type="text" class="dpin" id="dp-age" placeholder="DD/MM/YYYY" readonly onclick="dpOpen('age')" />
               <span class="dparr" onclick="dpOpen('age')">▾</span>
             </div>
-            <small class="dp-hint" data-i="dp_hint"></small>
+            <small class="dp-hint" data-i="dp_hint_age"></small>
           </div>
           <button class="btn btn-p" onclick="calcAge()">
             ⚡ <span data-i="btn_c">Calculate</span>
@@ -1462,7 +1474,7 @@
             <div class="fr3">
               <div class="fg">
                 <label data-i="lbl_prin">Principal</label
-                ><input type="number" id="js-c" placeholder="10000" min="0" />
+                ><input type="text" id="js-c" placeholder="10000" inputmode="decimal" />
               </div>
               <div class="fg">
                 <label data-i="lbl_rate">Rate %/month</label
@@ -1510,7 +1522,7 @@
             <div class="fr3">
               <div class="fg">
                 <label data-i="lbl_prin">Principal</label
-                ><input type="number" id="jc-c" placeholder="10000" min="0" />
+                ><input type="text" id="jc-c" placeholder="10000" inputmode="decimal" />
               </div>
               <div class="fg">
                 <label data-i="lbl_rate">Rate %/month</label
@@ -1566,7 +1578,7 @@
           <div class="fr">
             <div class="fg">
               <label data-i="lbl_op">Original price</label
-              ><input type="number" id="dc-p" placeholder="299.90" min="0" />
+              ><input type="text" id="dc-p" placeholder="299.90" inputmode="decimal" />
             </div>
             <div class="fg">
               <label data-i="lbl_dp">Discount (%)</label
@@ -1606,7 +1618,7 @@
           <div class="fr">
             <div class="fg">
               <label data-i="lbl_amt">Total amount</label
-              ><input type="number" id="in-v" placeholder="1200" min="0" />
+              ><input type="text" id="in-v" placeholder="1200" inputmode="decimal" />
             </div>
             <div class="fg">
               <label data-i="lbl_ins">Installments</label
@@ -1670,7 +1682,7 @@
               </div>
               <div class="fg">
                 <label data-i="lbl_of">of</label
-                ><input type="number" id="p1t" placeholder="200" />
+                ><input type="text" id="p1t" placeholder="200" inputmode="decimal" />
               </div>
             </div>
             <button class="btn btn-p" onclick="cp1()">
@@ -1683,11 +1695,11 @@
             <div class="fr">
               <div class="fg">
                 <label>X</label
-                ><input type="number" id="p2x" placeholder="50" />
+                ><input type="text" id="p2x" placeholder="50" inputmode="decimal" />
               </div>
               <div class="fg">
                 <label data-i="lbl_ofy">of Y</label
-                ><input type="number" id="p2y" placeholder="200" />
+                ><input type="text" id="p2y" placeholder="200" inputmode="decimal" />
               </div>
             </div>
             <button class="btn btn-p" onclick="cp2()">
@@ -1700,11 +1712,11 @@
             <div class="fr">
               <div class="fg">
                 <label data-i="lbl_fr">From</label
-                ><input type="number" id="p3i" placeholder="100" />
+                ><input type="text" id="p3i" placeholder="100" inputmode="decimal" />
               </div>
               <div class="fg">
                 <label data-i="lbl_to">To</label
-                ><input type="number" id="p3f" placeholder="130" />
+                ><input type="text" id="p3f" placeholder="130" inputmode="decimal" />
               </div>
             </div>
             <button class="btn btn-p" onclick="cp3()">
@@ -1787,11 +1799,11 @@
             <div class="fr3">
               <div class="fg">
                 <label data-i="das_rev12">Receita bruta 12m (R$)</label
-                ><input type="number" id="das-rb" placeholder="360000" />
+                ><input type="text" id="das-rb" placeholder="360000" inputmode="decimal" />
               </div>
               <div class="fg">
                 <label data-i="das_rev_m">Receita do mês (R$)</label
-                ><input type="number" id="das-rm" placeholder="30000" />
+                ><input type="text" id="das-rm" placeholder="30000" inputmode="decimal" />
               </div>
               <div class="fg">
                 <label data-i="das_annex">Anexo</label>
@@ -1911,9 +1923,10 @@
           <div class="fg">
             <label data-i="prol_sal">Pró-labore bruto (R$)</label
             ><input
-              type="number"
+              type="text"
               id="pl-s"
               placeholder="2000"
+              inputmode="decimal"
               oninput="calcProl()"
             />
           </div>
@@ -2024,7 +2037,7 @@
           <div class="fr">
             <div class="fg">
               <label data-i="lbl_sal">Gross salary (R$)</label
-              ><input type="number" id="v-s" placeholder="3500" />
+              ><input type="text" id="v-s" placeholder="3500" inputmode="decimal" />
             </div>
             <div class="fg">
               <label data-i="lbl_vd">Vacation days</label
@@ -2076,7 +2089,7 @@
           <div class="fr">
             <div class="fg">
               <label data-i="lbl_sal">Gross salary (R$)</label
-              ><input type="number" id="t-s" placeholder="3500" />
+              ><input type="text" id="t-s" placeholder="3500" inputmode="decimal" />
             </div>
             <div class="fg">
               <label data-i="lbl_mw">Months worked</label
@@ -2121,7 +2134,7 @@
           <div class="fr">
             <div class="fg">
               <label data-i="lbl_sal">Gross salary (R$)</label
-              ><input type="number" id="ot-s" placeholder="3500" />
+              ><input type="text" id="ot-s" placeholder="3500" inputmode="decimal" />
             </div>
             <div class="fg">
               <label data-i="lbl_mh">Monthly hours</label
@@ -2175,7 +2188,7 @@
         <div class="pb">
           <div class="fg">
             <label data-i="lbl_sal">Gross salary (R$)</label
-            ><input type="number" id="is-s" placeholder="3500" />
+            ><input type="text" id="is-s" placeholder="3500" inputmode="decimal" />
           </div>
           <button class="btn btn-p" onclick="calcINSS()">
             ⚡ <span data-i="btn_c">Calculate</span>
@@ -2225,7 +2238,7 @@
           <div class="fr3">
             <div class="fg">
               <label data-i="lbl_sal">Salário bruto (R$)</label
-              ><input type="number" id="rs-s" placeholder="3000" />
+              ><input type="text" id="rs-s" placeholder="3000" inputmode="decimal" />
             </div>
             <div class="fg">
               <label data-i="rs_months">Meses trabalhados</label
@@ -2263,7 +2276,7 @@
           </div>
           <div class="fg">
             <label data-i="rs_fgts_bal">Saldo FGTS acumulado (R$)</label
-            ><input type="number" id="rs-f" placeholder="2400" />
+            ><input type="text" id="rs-f" placeholder="2400" inputmode="decimal" />
           </div>
           <button class="btn btn-p" onclick="calcResc()">
             ⚡ <span data-i="btn_c">Calculate</span>
@@ -2343,7 +2356,7 @@
           <div class="fr">
             <div class="fg">
               <label data-i="lbl_sal">Salário bruto (R$)</label
-              ><input type="number" id="ir-s" placeholder="5000" />
+              ><input type="text" id="ir-s" placeholder="5000" inputmode="decimal" />
             </div>
             <div class="fg">
               <label data-i="ir_dep">Dependentes</label
@@ -2548,7 +2561,7 @@
           <div class="fr3">
             <div class="fg">
               <label data-i="lbl_sal">Salário bruto (R$)</label
-              ><input type="number" id="liq-s" placeholder="4000" min="0" />
+              ><input type="text" id="liq-s" placeholder="4000" inputmode="decimal" />
             </div>
             <div class="fg">
               <label data-i="ir_dep">Dependentes IR</label
@@ -2556,7 +2569,7 @@
             </div>
             <div class="fg">
               <label data-i="liq_outros">Outros descontos (R$)</label
-              ><input type="number" id="liq-out" placeholder="0" min="0" />
+              ><input type="text" id="liq-out" placeholder="0" inputmode="decimal" />
             </div>
           </div>
 
@@ -2578,27 +2591,27 @@
             <div class="fr" style="flex-wrap: wrap; gap: 10px">
               <div class="fg" style="min-width: 140px">
                 <label data-i="liq_vt">Vale-transporte (R$)</label
-                ><input type="number" id="liq-vt" placeholder="0" min="0" />
+                ><input type="text" id="liq-vt" placeholder="0" inputmode="decimal" />
               </div>
               <div class="fg" style="min-width: 140px">
                 <label data-i="liq_vr">Vale-refeição/alimentação (R$)</label
-                ><input type="number" id="liq-vr" placeholder="0" min="0" />
+                ><input type="text" id="liq-vr" placeholder="0" inputmode="decimal" />
               </div>
               <div class="fg" style="min-width: 140px">
                 <label data-i="liq_ps">Plano de saúde (R$)</label
-                ><input type="number" id="liq-ps" placeholder="0" min="0" />
+                ><input type="text" id="liq-ps" placeholder="0" inputmode="decimal" />
               </div>
               <div class="fg" style="min-width: 140px">
                 <label data-i="liq_pd">Plano dental (R$)</label
-                ><input type="number" id="liq-pd" placeholder="0" min="0" />
+                ><input type="text" id="liq-pd" placeholder="0" inputmode="decimal" />
               </div>
               <div class="fg" style="min-width: 140px">
                 <label data-i="liq_prev">Previdência privada (R$)</label
-                ><input type="number" id="liq-prev" placeholder="0" min="0" />
+                ><input type="text" id="liq-prev" placeholder="0" inputmode="decimal" />
               </div>
               <div class="fg" style="min-width: 140px">
                 <label data-i="liq_cons">Consignado (R$)</label
-                ><input type="number" id="liq-cons" placeholder="0" min="0" />
+                ><input type="text" id="liq-cons" placeholder="0" inputmode="decimal" />
               </div>
             </div>
           </div>
@@ -2820,9 +2833,10 @@
             <div class="fg">
               <label data-i="lbl_amt">Amount</label
               ><input
-                type="number"
+                type="text"
                 id="cc-a"
                 placeholder="100"
+                inputmode="decimal"
                 oninput="calcCur()"
               />
             </div>
@@ -4018,6 +4032,8 @@
           lbl_nbd: "Business days to add",
           lbl_due: "Due date",
           lbl_dob: "Date of birth",
+          dp_hint: "Click to pick or type MM/DD/YYYY",
+          dp_hint_age: "Click to pick or type DD/MM/YYYY",
           lbl_prin: "Principal",
           lbl_rate: "Rate %/month",
           lbl_per: "Months",
@@ -4144,7 +4160,7 @@
           das_rev_m: "Month revenue (R$)",
           das_annex: "Annex",
           prol_sm_ref: "Current minimum wage",
-          prol_sal: "Pro-labore gross (R$)",
+          prol_sal: "Pro-labore gross ($)",
           prol_sm: "Minimum wage (reference)",
           prol_min: "Legal minimum (28%)",
           prol_pct: "% of min. wage",
@@ -4298,6 +4314,8 @@
           lbl_nbd: "Dias úteis a somar",
           lbl_due: "Data de vencimento",
           lbl_dob: "Data de nascimento",
+          dp_hint: "Clique para escolher ou digite DD/MM/AAAA",
+          dp_hint_age: "Clique para escolher ou digite DD/MM/AAAA",
           lbl_prin: "Capital inicial (R$)",
           lbl_rate: "Taxa % ao mês",
           lbl_per: "Meses",
@@ -4503,11 +4521,13 @@
         },
       };
       let L = "en";
+      if (typeof window !== "undefined") window.L = L;
       function t(k) {
         return TR[L][k] || TR.en[k] || k;
       }
       function setLang(l) {
         L = l;
+        if (typeof window !== "undefined") window.L = l;
         document.documentElement.lang = l;
         document
           .querySelectorAll(".lbtn")
@@ -4521,22 +4541,39 @@
           .querySelectorAll("[data-i-placeholder]")
           .forEach((el) => (el.placeholder = t(el.dataset.iPlaceholder)));
         // Re-format datepicker inputs for the new locale.
-        // Keeps existing selections — only display format and placeholder change.
+        // Age Calculator always uses DD/MM; others follow locale.
         const dpPh = l === "pt" ? "DD/MM/AAAA" : "MM/DD/YYYY";
+        const agePh = l === "pt" ? "DD/MM/AAAA" : "DD/MM/YYYY";
         Object.keys(DP).forEach((id) => {
           dpBuf[id] = ""; // clear any in-progress typed buffer
           const el = document.getElementById("dp-" + id);
           if (el) {
             el.value = DP[id].sel ? fmtD(DP[id].sel) : "";
-            el.placeholder = dpPh;
+            el.placeholder = id === "age" ? agePh : dpPh;
             el.classList.remove("dpd-typing", "dpd-invalid");
           }
         });
         dpClose();
         ecRender();
         dpRender();
+        if (typeof refreshCurrencyMasks === "function") refreshCurrencyMasks();
+        try {
+          calcProl();
+          if (document.getElementById("das-rb")?.value || document.getElementById("das-rm")?.value) {
+            calcDAS();
+            calcSimples();
+          }
+          if (document.getElementById("is-s")?.value) calcINSS();
+          if (document.getElementById("rs-s")?.value) calcResc();
+          if (document.getElementById("ir-s")?.value) calcIRRF();
+          if (document.getElementById("liq-s")?.value) calcLiq();
+        } catch (_) {}
         try { localStorage.setItem("calcverse_lang", l); } catch (_) {}
       }
+
+      // ── CURRENCY (js/core/currency.js) ─────────────────────────────────────
+      // Architecture: formatCurrency (display) | parseCurrency (calculations) | sanitizeCurrencyInput (typing)
+      // IMPORTANT: Always use parseCurrency(el.value) before calculations — never use formatted strings in math.
 
       // HOLIDAYS 2026 (BR)
       const HOL = {
@@ -4623,7 +4660,10 @@
         }
         // Always sync displayed value (dpInit may be called twice with different defaults)
         const el = document.getElementById("dp-" + id);
-        if (el) el.value = def ? fmtD(def) : "";
+        if (el) {
+          el.value = def ? fmtD(def) : "";
+          if (id === "age") el.placeholder = L === "pt" ? "DD/MM/AAAA" : "DD/MM/YYYY";
+        }
       }
 
       function dpOpen(id) {
@@ -4797,7 +4837,7 @@
         el.classList.add("dpd-typing");
         el.classList.remove("dpd-invalid");
         if (digits.length === 8) {
-          const dateStr = dpParseTyped(digits);
+          const dateStr = dpParseTyped(digits, id);
           if (dateStr) {
             DP[id].sel = dateStr;
             DP[id].y = parseInt(dateStr.slice(0, 4));
@@ -4815,12 +4855,14 @@
         el.value = display;
       }
 
-      function dpParseTyped(digits) {
+      function dpParseTyped(digits, id) {
         const p1 = parseInt(digits.slice(0, 2), 10);
         const p2 = parseInt(digits.slice(2, 4), 10);
         const yr  = parseInt(digits.slice(4, 8), 10);
-        const day   = L === "pt" ? p1 : p2;
-        const month = L === "pt" ? p2 : p1;
+        // Age Calculator (date of birth) always uses DD/MM/YYYY; others follow locale
+        const useDDMM = id === "age" || L === "pt";
+        const day   = useDDMM ? p1 : p2;
+        const month = useDDMM ? p2 : p1;
         if (month < 1 || month > 12 || day < 1 || yr < 1000) return null;
         const str = `${yr}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         const obj = new Date(str + "T00:00:00");
@@ -5219,54 +5261,43 @@
         document.getElementById("r-dl").classList.add("show");
       }
 
-      // AGE
+      // AGE — uses same algorithm as Date Difference: direct y/m/d with proper borrow for month boundaries, leap years
       function calcAge() {
         const s = dpGet("age");
         if (!s) {
           alert(L === "pt" ? "Selecione a data de nascimento." : "Select date of birth.");
           return;
         }
-        const nasc = new Date(s + "T00:00:00");
-        const hj   = new Date(); hj.setHours(0, 0, 0, 0);
-        if (nasc > hj) { alert(L === "pt" ? "Data no futuro." : "Future date."); return; }
+        const a = new Date(s + "T00:00:00");
+        const b = new Date(); b.setHours(0, 0, 0, 0);
+        if (a > b) { alert(L === "pt" ? "Data no futuro." : "Future date."); return; }
 
-        // Full years — subtract 1 if birthday hasn't occurred yet this year
-        let y = hj.getFullYear() - nasc.getFullYear();
-        if (
-          hj.getMonth() < nasc.getMonth() ||
-          (hj.getMonth() === nasc.getMonth() && hj.getDate() < nasc.getDate())
-        ) y--;
-
-        // Last birthday date (clamp day for short months, e.g. Feb 29 in non-leap year)
-        const lastBdMaxDay = new Date(nasc.getFullYear() + y, nasc.getMonth() + 1, 0).getDate();
-        const lastBd = new Date(nasc.getFullYear() + y, nasc.getMonth(), Math.min(nasc.getDate(), lastBdMaxDay));
-
-        // Full months since last birthday
-        let m = (hj.getFullYear() - lastBd.getFullYear()) * 12 + hj.getMonth() - lastBd.getMonth();
-        const lastDayOfCurMonth = new Date(hj.getFullYear(), hj.getMonth() + 1, 0).getDate();
-        if (hj.getDate() < Math.min(nasc.getDate(), lastDayOfCurMonth)) m--;
-
-        // Date of the last month-anniversary
-        const mAnnY = lastBd.getFullYear() + Math.floor((lastBd.getMonth() + m) / 12);
-        const mAnnM = (lastBd.getMonth() + m) % 12;
-        const mAnnD = Math.min(nasc.getDate(), new Date(mAnnY, mAnnM + 1, 0).getDate());
-        const mAnn  = new Date(mAnnY, mAnnM, mAnnD);
-
-        // Remaining days (always non-negative)
-        const d = Math.round((hj - mAnn) / 864e5);
+        // Years, months, days: effective birth day for boundaries (Feb 29→28 in non-leap, end-of-month)
+        let y = b.getFullYear() - a.getFullYear();
+        let m = b.getMonth() - a.getMonth();
+        const lastDayPrev = new Date(b.getFullYear(), b.getMonth(), 0).getDate();
+        const effectiveBirthDay = Math.min(a.getDate(), lastDayPrev);
+        let d = b.getDate() - effectiveBirthDay;
+        if (d < 0) { m--; d += lastDayPrev; }
+        if (m < 0) { y--; m += 12; }
 
         document.getElementById("age-y").textContent = y + (L === "pt" ? " anos" : " years");
         document.getElementById("age-det").textContent = L === "pt"
           ? `${m} ${m === 1 ? "mês" : "meses"} e ${d} ${d === 1 ? "dia" : "dias"}`
           : `${m} month${m !== 1 ? "s" : ""} and ${d} day${d !== 1 ? "s" : ""}`;
 
-        // Next birthday — clamp Feb 29 to Feb 28 on non-leap years
-        const nbY = hj.getFullYear() + (hj.getMonth() > nasc.getMonth() || (hj.getMonth() === nasc.getMonth() && hj.getDate() > nasc.getDate()) ? 1 : 0);
-        const nbD = Math.min(nasc.getDate(), new Date(nbY, nasc.getMonth() + 1, 0).getDate());
-        const prx = new Date(nbY, nasc.getMonth(), nbD);
-        const df  = Math.round((prx - hj) / 864e5);
+        // Days until next birthday: next (birthMonth, birthDay), clamp Feb 29 in non-leap years
+        let nbY = b.getFullYear();
+        let nbD = Math.min(a.getDate(), new Date(nbY, a.getMonth() + 1, 0).getDate());
+        let prx = new Date(nbY, a.getMonth(), nbD);
+        if (prx < b) {
+          nbY = b.getFullYear() + 1;
+          nbD = Math.min(a.getDate(), new Date(nbY, a.getMonth() + 1, 0).getDate());
+          prx = new Date(nbY, a.getMonth(), nbD);
+        }
+        const df = Math.round((prx - b) / 864e5);
         document.getElementById("age-bd").textContent = df === 0
-          ? (L === "pt" ? "🎉 Feliz aniversário hoje!" : "🎉 Happy birthday today!")
+          ? (L === "pt" ? "🎉 Feliz aniversário para você! Aproveite seu dia!" : "🎉 Happy Birthday to you! Enjoy your special day!")
           : (L === "pt" ? `🎂 Faltam ${df} dias para o próximo aniversário` : `🎂 ${df} days until next birthday`);
         document.getElementById("r-age").classList.add("show");
       }
@@ -5284,7 +5315,7 @@
         return `<tr><td>${m}</td><td>${f2(im)}</td><td>${f2(acc)}</td><td>${f2(bal)}</td></tr>`;
       }
       function calcJS() {
-        const C = parseFloat(document.getElementById("js-c").value),
+        const C = parseCurrency(document.getElementById("js-c").value),
           r = parseFloat(document.getElementById("js-r").value) / 100,
           n = parseInt(document.getElementById("js-p").value);
         if (isNaN(C) || isNaN(r) || isNaN(n)) return;
@@ -5307,7 +5338,7 @@
         document.getElementById("r-js").classList.add("show");
       }
       function calcJC() {
-        const C = parseFloat(document.getElementById("jc-c").value),
+        const C = parseCurrency(document.getElementById("jc-c").value),
           r = parseFloat(document.getElementById("jc-r").value) / 100,
           n = parseInt(document.getElementById("jc-p").value);
         if (isNaN(C) || isNaN(r) || isNaN(n)) return;
@@ -5334,7 +5365,7 @@
 
       // DISCOUNT / INSTALL / PERC
       function calcDisc() {
-        const p = parseFloat(document.getElementById("dc-p").value),
+        const p = parseCurrency(document.getElementById("dc-p").value),
           d = parseFloat(document.getElementById("dc-d").value);
         if (isNaN(p) || isNaN(d)) return;
         const sv = (p * d) / 100;
@@ -5343,7 +5374,7 @@
         document.getElementById("r-dc").classList.add("show");
       }
       function calcInst() {
-        const v = parseFloat(document.getElementById("in-v").value),
+        const v = parseCurrency(document.getElementById("in-v").value),
           n = parseInt(document.getElementById("in-n").value),
           r = parseFloat(document.getElementById("in-r").value) / 100 || 0;
         if (isNaN(v) || isNaN(n)) return;
@@ -5375,7 +5406,7 @@
       }
       function cp1() {
         const p = parseFloat(document.getElementById("p1p").value),
-          t2 = parseFloat(document.getElementById("p1t").value);
+          t2 = parseCurrency(document.getElementById("p1t").value);
         if (isNaN(p) || isNaN(t2)) return;
         const r = (p / 100) * t2;
         document.getElementById("pr1").textContent = f2(r);
@@ -5384,8 +5415,8 @@
           `${p}% of ${f2(t2)} = ${f2(r)}`;
       }
       function cp2() {
-        const x = parseFloat(document.getElementById("p2x").value),
-          y = parseFloat(document.getElementById("p2y").value);
+        const x = parseCurrency(document.getElementById("p2x").value),
+          y = parseCurrency(document.getElementById("p2y").value);
         if (isNaN(x) || isNaN(y) || y === 0) return;
         const r = (x / y) * 100;
         document.getElementById("pr2").textContent = f2(r) + "%";
@@ -5394,8 +5425,8 @@
           `${f2(x)} is ${f2(r)}% of ${f2(y)}`;
       }
       function cp3() {
-        const i = parseFloat(document.getElementById("p3i").value),
-          f = parseFloat(document.getElementById("p3f").value);
+        const i = parseCurrency(document.getElementById("p3i").value),
+          f = parseCurrency(document.getElementById("p3f").value);
         if (isNaN(i) || isNaN(f) || i === 0) return;
         const r = ((f - i) / i) * 100,
           sg = r >= 0 ? "+" : "";
@@ -5428,7 +5459,7 @@
         return d;
       }
       function calcINSS() {
-        const s = parseFloat(document.getElementById("is-s").value);
+        const s = parseCurrency(document.getElementById("is-s").value);
         if (isNaN(s)) return;
         const d = inssCalc(s),
           n = s - d,
@@ -5455,7 +5486,7 @@
 
       // HR
       function calcVac() {
-        const s = parseFloat(document.getElementById("v-s").value),
+        const s = parseCurrency(document.getElementById("v-s").value),
           dy = parseInt(document.getElementById("v-d").value) || 30,
           ab = parseInt(document.getElementById("v-a").value);
         if (isNaN(s)) return;
@@ -5478,7 +5509,7 @@
         document.getElementById("r-vac").classList.add("show");
       }
       function calc13() {
-        const s = parseFloat(document.getElementById("t-s").value),
+        const s = parseCurrency(document.getElementById("t-s").value),
           m = parseInt(document.getElementById("t-m").value) || 12;
         if (isNaN(s)) return;
         const g = s * (m / 12),
@@ -5494,7 +5525,7 @@
         document.getElementById("r-13").classList.add("show");
       }
       function calcOT() {
-        const s = parseFloat(document.getElementById("ot-s").value),
+        const s = parseCurrency(document.getElementById("ot-s").value),
           h = parseFloat(document.getElementById("ot-h").value) || 220,
           h50 = parseFloat(document.getElementById("ot-50").value) || 0,
           h100 = parseFloat(document.getElementById("ot-100").value) || 0;
@@ -5579,7 +5610,7 @@
         calcCur();
       }
       function calcCur() {
-        const amt = parseFloat(document.getElementById("cc-a")?.value) || 1,
+        const amt = parseCurrency(document.getElementById("cc-a")?.value) || 1,
           fr = document.getElementById("cc-f")?.value || "USD",
           to = document.getElementById("cc-t")?.value || "BRL";
         if (!rates[fr] || !rates[to]) return;
@@ -6005,6 +6036,7 @@
       loadRates();
       genPw();
       genLorem();
+      initCurrencyMasks();
 
       // ── DAS MEI & Simples Nacional ──────────────────────────────────────────
       function dasTab(n) {
@@ -6024,26 +6056,26 @@
           lblTax = "";
         if (act === "com") {
           icms = 1;
-          lblTax = "ICMS (R$ 1,00)";
+          lblTax = "ICMS (" + formatCurrencyWithSymbol(1) + ")";
         } else if (act === "svc") {
           iss = 5;
-          lblTax = "ISS (R$ 5,00)";
+          lblTax = "ISS (" + formatCurrencyWithSymbol(5) + ")";
         } else {
           icms = 1;
           iss = 5;
-          lblTax = "ICMS+ISS (R$ 6,00)";
+          lblTax = "ICMS+ISS (" + formatCurrencyWithSymbol(6) + ")";
         }
         const taxFix = icms + iss,
           empV = emp ? SM2025 * 0.08 : 0,
           tot = INSS_MEI + taxFix + empV;
-        document.getElementById("das-inss").textContent = "R$ " + f2(INSS_MEI);
+        document.getElementById("das-inss").textContent = getCurrencyPrefix() + f2(INSS_MEI);
         document.getElementById("das-iss").textContent =
-          "R$ " + taxFix.toFixed(2);
+          getCurrencyPrefix() + taxFix.toFixed(2);
         document.getElementById("das-iss-lbl").textContent = lblTax;
         document.getElementById("das-emp-v").textContent = emp
-          ? "R$ " + f2(empV)
+          ? getCurrencyPrefix() + f2(empV)
           : "—";
-        document.getElementById("das-tot").textContent = "R$ " + f2(tot);
+        document.getElementById("das-tot").textContent = getCurrencyPrefix() + f2(tot);
         document.getElementById("r-das").classList.add("show");
       }
       // Simples Nacional 2025 tables [receita_max, aliq_nominal, deducao]
@@ -6090,8 +6122,8 @@
         ],
       };
       function calcSimples() {
-        const rb = parseFloat(document.getElementById("das-rb").value) || 0,
-          rm = parseFloat(document.getElementById("das-rm").value) || 0,
+        const rb = parseCurrency(document.getElementById("das-rb").value) || 0,
+          rm = parseCurrency(document.getElementById("das-rm").value) || 0,
           anx = parseInt(document.getElementById("das-anx").value);
         if (!rb || !rm) {
           alert(
@@ -6121,17 +6153,17 @@
           (aliq * 100).toFixed(2) + "%";
         document.getElementById("sn-ef").textContent =
           (ef * 100).toFixed(2) + "%";
-        document.getElementById("sn-das").textContent = "R$ " + f2(das);
-        document.getElementById("sn-liq").textContent = "R$ " + f2(rm - das);
+        document.getElementById("sn-das").textContent = getCurrencyPrefix() + f2(das);
+        document.getElementById("sn-liq").textContent = getCurrencyPrefix() + f2(rm - das);
         document.getElementById("r-simples").classList.add("show");
       }
 
       // ── PRÓ-LABORE ────────────────────────────────────────────────────────────
       function calcProl() {
-        const s = parseFloat(document.getElementById("pl-s").value) || 0,
+        const s = parseCurrency(document.getElementById("pl-s").value) || 0,
           sm = SM2025,
           minLegal = sm * 0.28;
-        document.getElementById("pl-min").textContent = "R$ " + f2(minLegal);
+        document.getElementById("pl-min").textContent = getCurrencyPrefix() + f2(minLegal);
         if (!s) {
           document.getElementById("pl-inss").textContent = "—";
           document.getElementById("pl-net").textContent = "—";
@@ -6142,8 +6174,8 @@
         const inss = s * 0.11,
           net = s - inss,
           pct = (s / sm) * 100;
-        document.getElementById("pl-inss").textContent = "R$ " + f2(inss);
-        document.getElementById("pl-net").textContent = "R$ " + f2(net);
+        document.getElementById("pl-inss").textContent = getCurrencyPrefix() + f2(inss);
+        document.getElementById("pl-net").textContent = getCurrencyPrefix() + f2(net);
         document.getElementById("pl-pct").textContent = pct.toFixed(1) + "%";
         const w = document.getElementById("pl-warn");
         if (s < minLegal) {
@@ -6152,8 +6184,8 @@
             "background:color-mix(in srgb,#E84040 10%,white);border:1px solid #E84040;color:#c0392b;border-radius:8px;padding:10px 14px;font-size:12px;margin-top:8px;";
           w.textContent =
             L === "pt"
-              ? `⚠️ Valor abaixo do mínimo legal (R$ ${f2(minLegal)} = 28% do SM). Risco de autuação pela Receita Federal.`
-              : `⚠️ Below legal minimum (R$ ${f2(minLegal)} = 28% of minimum wage). Risk of tax authority penalty.`;
+              ? `⚠️ Valor abaixo do mínimo legal (${getCurrencyPrefix()}${f2(minLegal)} = 28% do SM). Risco de autuação pela Receita Federal.`
+              : `⚠️ Below legal minimum (${getCurrencyPrefix()}${f2(minLegal)} = 28% of minimum wage). Risk of tax authority penalty.`;
         } else {
           w.style.display = "block";
           w.style.cssText +=
@@ -6167,11 +6199,11 @@
 
       // ── RESCISÃO CLT ─────────────────────────────────────────────────────────
       function calcResc() {
-        const s = parseFloat(document.getElementById("rs-s").value),
+        const s = parseCurrency(document.getElementById("rs-s").value),
           m = parseInt(document.getElementById("rs-m").value) || 0,
           d = parseInt(document.getElementById("rs-d").value) || 0,
           tp = document.getElementById("rs-t").value,
-          fgts = parseFloat(document.getElementById("rs-f").value) || 0;
+          fgts = parseCurrency(document.getElementById("rs-f").value) || 0;
         if (isNaN(s)) return;
         const saldo = (s / 30) * d;
         const ferProp = s * ((m % 12) / 12) * (4 / 3);
@@ -6207,14 +6239,14 @@
         const bruto = saldo + ferProp + t13 + multa + aviso;
         const inss = inssCalc(s);
         const net = bruto - inss;
-        document.getElementById("rs-sb").textContent = "R$ " + f2(saldo);
-        document.getElementById("rs-fv").textContent = "R$ " + f2(ferProp);
-        document.getElementById("rs-13v").textContent = "R$ " + f2(t13);
+        document.getElementById("rs-sb").textContent = getCurrencyPrefix() + f2(saldo);
+        document.getElementById("rs-fv").textContent = getCurrencyPrefix() + f2(ferProp);
+        document.getElementById("rs-13v").textContent = getCurrencyPrefix() + f2(t13);
         document.getElementById("rs-mult").textContent = multa
-          ? "R$ " + f2(multa)
+          ? getCurrencyPrefix() + f2(multa)
           : "—";
-        document.getElementById("rs-tot").textContent = "R$ " + f2(bruto);
-        document.getElementById("rs-net").textContent = "R$ " + f2(net);
+        document.getElementById("rs-tot").textContent = getCurrencyPrefix() + f2(bruto);
+        document.getElementById("rs-net").textContent = getCurrencyPrefix() + f2(net);
         document.getElementById("rs-obs").textContent = obs;
         document.getElementById("r-resc").classList.add("show");
       }
@@ -6229,7 +6261,7 @@
       ];
       const IRRF_DEP = 189.59;
       function calcIRRF() {
-        const s = parseFloat(document.getElementById("ir-s").value),
+        const s = parseCurrency(document.getElementById("ir-s").value),
           dep = parseInt(document.getElementById("ir-d").value) || 0;
         if (isNaN(s)) return;
         const inss = inssCalc(s),
@@ -6275,16 +6307,16 @@
               ? "You are exempt from income tax this month"
               : "Will be withheld from your salary";
         document.getElementById("ir-verdict-val").textContent = isentoIR
-          ? "R$ 0,00"
-          : "- R$ " + f2(irrf);
+          ? formatCurrencyWithSymbol(0)
+          : "- " + getCurrencyPrefix() + f2(irrf);
         document.getElementById("ir-verdict-val").style.color = isentoIR
           ? "var(--a3)"
           : "#E84040";
         const redTxt =
           redutor > 0
             ? L === "pt"
-              ? ` · redutor Lei 15.270/25: -R$ ${f2(redutor)}`
-              : ` · Lei 15.270/25 redutor: -R$ ${f2(redutor)}`
+              ? ` · redutor Lei 15.270/25: -${getCurrencyPrefix()}${f2(redutor)}`
+              : ` · Lei 15.270/25 redutor: -${getCurrencyPrefix()}${f2(redutor)}`
             : "";
         document.getElementById("ir-verdict-sub").textContent = isentoIR
           ? L === "pt"
@@ -6297,14 +6329,14 @@
           ? "var(--a3)"
           : "#c0392b";
         // details
-        document.getElementById("ir-inss").textContent = "R$ " + f2(inss);
-        document.getElementById("ir-dep-v").textContent = "R$ " + f2(dedDep);
+        document.getElementById("ir-inss").textContent = getCurrencyPrefix() + f2(inss);
+        document.getElementById("ir-dep-v").textContent = getCurrencyPrefix() + f2(dedDep);
         const depBox = document.getElementById("ir-dep-box");
         if (depBox) depBox.style.display = dep > 0 ? "block" : "none";
-        document.getElementById("ir-base").textContent = "R$ " + f2(base);
+        document.getElementById("ir-base").textContent = getCurrencyPrefix() + f2(base);
         document.getElementById("ir-aliq").textContent =
           (aliq * 100).toFixed(1) + "% → " + efAliq.toFixed(2) + "% efetiva";
-        document.getElementById("ir-net").textContent = "R$ " + f2(net);
+        document.getElementById("ir-net").textContent = getCurrencyPrefix() + f2(net);
         document.getElementById("r-irrf").classList.add("show");
       }
 
@@ -6472,12 +6504,7 @@
           SM2025 = val;
           const disp = document.getElementById("pl-sm-display");
           if (disp) {
-            disp.textContent =
-              "R$ " +
-              val.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              });
+            disp.textContent = formatCurrencyWithSymbol(val);
           }
           const badge = document.getElementById("pl-sm-badge");
           if (badge) {
@@ -6506,7 +6533,7 @@
           const src = document.getElementById("pl-sm-src");
           if (src) {
             src.style.display = "block";
-            src.textContent = "Usando valor fixo: R$ " + SM2025.toFixed(2);
+            src.textContent = (L === "pt" ? "Usando valor fixo: " : "Using fixed value: ") + formatCurrencyWithSymbol(SM2025);
           }
         }
       }
@@ -6517,17 +6544,17 @@
 
       // ── SALÁRIO LÍQUIDO COMPLETO ──────────────────────────────────────────────
       function calcLiq() {
-        const s = parseFloat(document.getElementById("liq-s").value) || 0;
+        const s = parseCurrency(document.getElementById("liq-s").value) || 0;
         if (!s) return;
         const dep = parseInt(document.getElementById("liq-dep").value) || 0;
-        const vt = parseFloat(document.getElementById("liq-vt").value) || 0;
-        const vr = parseFloat(document.getElementById("liq-vr").value) || 0;
-        const ps = parseFloat(document.getElementById("liq-ps").value) || 0;
-        const pd = parseFloat(document.getElementById("liq-pd").value) || 0;
-        const prev = parseFloat(document.getElementById("liq-prev").value) || 0;
-        const cons = parseFloat(document.getElementById("liq-cons").value) || 0;
+        const vt = parseCurrency(document.getElementById("liq-vt").value) || 0;
+        const vr = parseCurrency(document.getElementById("liq-vr").value) || 0;
+        const ps = parseCurrency(document.getElementById("liq-ps").value) || 0;
+        const pd = parseCurrency(document.getElementById("liq-pd").value) || 0;
+        const prev = parseCurrency(document.getElementById("liq-prev").value) || 0;
+        const cons = parseCurrency(document.getElementById("liq-cons").value) || 0;
         const outros =
-          parseFloat(document.getElementById("liq-out").value) || 0;
+          parseCurrency(document.getElementById("liq-out").value) || 0;
 
         // INSS progressivo
         const inss = inssCalc(s);
@@ -6577,8 +6604,8 @@
             val: irrf,
             type: "obrig",
             note: pt
-              ? `Alíquota nominal ${(aliqIR * 100).toFixed(1)}% sobre base de R$ ${f2(baseIR)}`
-              : `Nominal rate ${(aliqIR * 100).toFixed(1)}% on base R$ ${f2(baseIR)}`,
+              ? `Alíquota nominal ${(aliqIR * 100).toFixed(1)}% sobre base de ${getCurrencyPrefix()}${f2(baseIR)}`
+              : `Nominal rate ${(aliqIR * 100).toFixed(1)}% on base ${getCurrencyPrefix()}${f2(baseIR)}`,
           },
           ...(vtDesc > 0
             ? [
@@ -6589,8 +6616,8 @@
                   val: vtDesc,
                   type: "ben",
                   note: pt
-                    ? `Desconto limitado a 6% do bruto (seu benefício: R$ ${f2(vt)})`
-                    : `Capped at 6% of gross (your benefit: R$ ${f2(vt)})`,
+                    ? `Desconto limitado a 6% do bruto (seu benefício: ${getCurrencyPrefix()}${f2(vt)})`
+                    : `Capped at 6% of gross (your benefit: ${getCurrencyPrefix()}${f2(vt)})`,
                 },
               ]
             : []),
@@ -6659,9 +6686,9 @@
         ];
 
         // render headline
-        document.getElementById("liq-net").textContent = "R$ " + f2(net);
+        document.getElementById("liq-net").textContent = getCurrencyPrefix() + f2(net);
         document.getElementById("liq-tot-desc").textContent =
-          "- R$ " + f2(totalDesc);
+          "- " + getCurrencyPrefix() + f2(totalDesc);
 
         // render bar
         const COLORS = {
@@ -6687,7 +6714,7 @@
         document.getElementById("liq-legend").innerHTML = segments
           .map(
             (sg) =>
-              `<div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--ink2)"><div style="width:10px;height:10px;border-radius:3px;background:${sg.color};flex-shrink:0"></div>${sg.label}: <strong>R$ ${f2(sg.val)}</strong></div>`,
+              `<div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--ink2)"><div style="width:10px;height:10px;border-radius:3px;background:${sg.color};flex-shrink:0"></div>${sg.label}: <strong>${getCurrencyPrefix()}${f2(sg.val)}</strong></div>`,
           )
           .join("");
 
@@ -6700,7 +6727,7 @@
         <div style="font-weight:500">${r.label}</div>
         ${r.note ? `<div style="font-size:11px;color:var(--ink2);margin-top:1px">${r.note}</div>` : ""}
       </td>
-      <td style="padding:9px 14px;text-align:right;font-weight:600;color:#E84040">- R$ ${f2(r.val)}</td>
+      <td style="padding:9px 14px;text-align:right;font-weight:600;color:#E84040">- ${getCurrencyPrefix()}${f2(r.val)}</td>
       <td style="padding:9px 14px;text-align:right;color:var(--ink2);font-size:12px">${((r.val / s) * 100).toFixed(2)}%</td>
     </tr>`;
         });
@@ -6710,18 +6737,18 @@
         document.getElementById("liq-foot").innerHTML = `
     <tr style="background:var(--sur2);font-weight:700">
       <td style="padding:9px 14px" data-i="liq_tot_desc">${pt ? "Total descontado" : "Total deducted"}</td>
-      <td style="padding:9px 14px;text-align:right;color:#E84040">- R$ ${f2(totalDesc)}</td>
+      <td style="padding:9px 14px;text-align:right;color:#E84040">- ${getCurrencyPrefix()}${f2(totalDesc)}</td>
       <td style="padding:9px 14px;text-align:right;color:var(--ink2);font-size:12px">${((totalDesc / s) * 100).toFixed(2)}%</td>
     </tr>
     <tr style="background:color-mix(in srgb,var(--a3) 9%,white);font-weight:800">
       <td style="padding:11px 14px;color:var(--a3)">${pt ? "💵 Salário líquido" : "💵 Net salary"}</td>
-      <td style="padding:11px 14px;text-align:right;color:var(--a3);font-size:15px">R$ ${f2(net)}</td>
+      <td style="padding:11px 14px;text-align:right;color:var(--a3);font-size:15px">${getCurrencyPrefix()}${f2(net)}</td>
       <td style="padding:11px 14px;text-align:right;color:var(--a3);font-size:12px">${((net / s) * 100).toFixed(2)}%</td>
     </tr>`;
 
         // FGTS note
         document.getElementById("liq-fgts-note").innerHTML =
-          `<strong>🏦 FGTS:</strong> ${pt ? `R$ ${f2(fgts)} depositados pelo empregador (8% do bruto) — não desconta do seu salário, mas é seu direito.` : `R$ ${f2(fgts)} deposited by employer (8% of gross) — not deducted from your pay, but it's yours.`}`;
+          `<strong>🏦 FGTS:</strong> ${pt ? `${getCurrencyPrefix()}${f2(fgts)} depositados pelo empregador (8% do bruto) — não desconta do seu salário, mas é seu direito.` : `${getCurrencyPrefix()}${f2(fgts)} deposited by employer (8% of gross) — not deducted from your pay, but it's yours.`}`;
 
         document.getElementById("r-liq").classList.add("show");
       }

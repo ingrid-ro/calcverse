@@ -25,6 +25,21 @@ function fmtD(s) {
   return L === 'pt' ? `${day}/${m}/${y}` : `${m}/${day}/${y}`;
 }
 
+// Parse currency — delegates to global parseCurrency from currency.js when available.
+// Always use parseCurrency(el.value) before calculations.
+function parseCurrency(str) {
+  if (typeof globalThis !== 'undefined' && typeof globalThis.parseCurrency === 'function') {
+    return globalThis.parseCurrency(str);
+  }
+  if (!str || typeof str !== 'string') return NaN;
+  const isPT = (typeof L !== 'undefined' && L === 'pt');
+  let s = str.replace(/\s/g, '').replace(/[^\d,.\-]/g, '');
+  if (isPT) s = s.replace(/\./g, '').replace(',', '.');
+  else s = s.replace(/,/g, '');
+  const n = parseFloat(s);
+  return isNaN(n) ? NaN : n;
+}
+
 // HTML entity escaping — prevents XSS when injecting user content into innerHTML
 function escH(s) {
   return String(s)

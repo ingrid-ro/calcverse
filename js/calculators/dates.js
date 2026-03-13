@@ -99,52 +99,41 @@ function calcDL() {
 }
 
 // ── Age Calculator ────────────────────────────────────────────────────────
+// Uses the same proven algorithm as calcDiff: direct year/month/day difference
+// with proper borrow for month boundaries, day differences, and leap years.
 function calcAge() {
   const s = dpGet('age');
   if (!s) { alert(L === 'pt' ? 'Selecione a data de nascimento.' : 'Select date of birth.'); return; }
-  const nasc = new Date(s + 'T00:00:00');
-  const hj   = new Date(); hj.setHours(0, 0, 0, 0);
-  if (nasc > hj) { alert(L === 'pt' ? 'Data no futuro.' : 'Future date.'); return; }
+  const a = new Date(s + 'T00:00:00');
+  const b = new Date(); b.setHours(0, 0, 0, 0);
+  if (a > b) { alert(L === 'pt' ? 'Data no futuro.' : 'Future date.'); return; }
 
-  // Full years: subtract 1 if birthday hasn't occurred yet this year
-  let y = hj.getFullYear() - nasc.getFullYear();
-  if (
-    hj.getMonth() < nasc.getMonth() ||
-    (hj.getMonth() === nasc.getMonth() && hj.getDate() < nasc.getDate())
-  ) y--;
-
-  // Last birthday date (clamp day for short months, e.g. Feb 29 in non-leap year)
-  const lastBdMaxDay = new Date(nasc.getFullYear() + y, nasc.getMonth() + 1, 0).getDate();
-  const lastBd = new Date(nasc.getFullYear() + y, nasc.getMonth(), Math.min(nasc.getDate(), lastBdMaxDay));
-
-  // Full months since last birthday
-  // Compare against min(birth day, last day of current month) so that e.g. Jun 30
-  // is treated as "having reached" the anniversary for someone born on the 31st
-  let m = (hj.getFullYear() - lastBd.getFullYear()) * 12 + hj.getMonth() - lastBd.getMonth();
-  const lastDayOfCurMonth = new Date(hj.getFullYear(), hj.getMonth() + 1, 0).getDate();
-  if (hj.getDate() < Math.min(nasc.getDate(), lastDayOfCurMonth)) m--;
-
-  // Date of the last month-anniversary (clamp birth day to month's actual last day)
-  const mAnnY = lastBd.getFullYear() + Math.floor((lastBd.getMonth() + m) / 12);
-  const mAnnM = (lastBd.getMonth() + m) % 12;
-  const mAnnD = Math.min(nasc.getDate(), new Date(mAnnY, mAnnM + 1, 0).getDate());
-  const mAnn  = new Date(mAnnY, mAnnM, mAnnD);
-
-  // Remaining days (always non-negative)
-  const d = Math.round((hj - mAnn) / 864e5);
+  // Years, months, days: use effective birth day for boundaries (Feb 29→28 in non-leap, end-of-month)
+  let y = b.getFullYear() - a.getFullYear();
+  let m = b.getMonth() - a.getMonth();
+  const lastDayPrev = new Date(b.getFullYear(), b.getMonth(), 0).getDate();
+  const effectiveBirthDay = Math.min(a.getDate(), lastDayPrev);
+  let d = b.getDate() - effectiveBirthDay;
+  if (d < 0) { m--; d += lastDayPrev; }
+  if (m < 0) { y--; m += 12; }
 
   document.getElementById('age-y').textContent = y + (L === 'pt' ? ' anos' : ' years');
   document.getElementById('age-det').textContent = L === 'pt'
     ? `${m} ${m === 1 ? 'mês' : 'meses'} e ${d} ${d === 1 ? 'dia' : 'dias'}`
     : `${m} month${m !== 1 ? 's' : ''} and ${d} day${d !== 1 ? 's' : ''}`;
 
-  // Next birthday (clamp Feb 29 to Feb 28 on non-leap years)
-  const nbY  = hj.getFullYear() + (hj.getMonth() > nasc.getMonth() || (hj.getMonth() === nasc.getMonth() && hj.getDate() > nasc.getDate()) ? 1 : 0);
-  const nbD  = Math.min(nasc.getDate(), new Date(nbY, nasc.getMonth() + 1, 0).getDate());
-  const prx  = new Date(nbY, nasc.getMonth(), nbD);
-  const df   = Math.round((prx - hj) / 864e5);
+  // Days until next birthday: next occurrence of (birthMonth, birthDay), clamp Feb 29 in non-leap years
+  let nbY = b.getFullYear();
+  let nbD = Math.min(a.getDate(), new Date(nbY, a.getMonth() + 1, 0).getDate());
+  let prx = new Date(nbY, a.getMonth(), nbD);
+  if (prx < b) {
+    nbY = b.getFullYear() + 1;
+    nbD = Math.min(a.getDate(), new Date(nbY, a.getMonth() + 1, 0).getDate());
+    prx = new Date(nbY, a.getMonth(), nbD);
+  }
+  const df = Math.round((prx - b) / 864e5);
   document.getElementById('age-bd').textContent = df === 0
-    ? (L === 'pt' ? '🎉 Feliz aniversário hoje!' : '🎉 Happy birthday today!')
+    ? (L === 'pt' ? '🎉 Feliz aniversário para você! Aproveite seu dia!' : '🎉 Happy Birthday to you! Enjoy your special day!')
     : (L === 'pt' ? `🎂 Faltam ${df} dias para o próximo aniversário` : `🎂 ${df} days until next birthday`);
   document.getElementById('r-age').classList.add('show');
 }
